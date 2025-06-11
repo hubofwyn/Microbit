@@ -61,6 +61,16 @@ Usage:
 scripts/flash_fw.sh
 ```
 
+### `scripts/save_hex.sh` (Retrieve flashed `.hex`)
+
+A helper to copy the current `microbit.hex` file from the connected micro:bit drive into a local per-kid directory for safekeeping.
+
+- Copies `microbit.hex` from the board to `programs/<kid_name>/` (by default under the current directory).
+- Usage:
+  ```bash
+  scripts/save_hex.sh <kid_name> [dest_base_dir]
+  ```
+
 #### Entering maintenance mode
 
 To enter maintenance mode:
@@ -83,9 +93,22 @@ To enter maintenance mode:
    ```bash
    code .
    ```
-2. Edit `python/main.py` as your MicroPython code starter template.
-3. Press `Ctrl+Shift+B` (or `Cmd+Shift+B` on macOS) to run the **Flash to micro:bit** task,
-   which invokes `uflash` on the active file and flashes the resulting `.hex`.
+2. Create (if needed) and edit a per-child Python file under `python/` (e.g., `python/axel/main.py`) instead of the default `python/main.py` to organize code per kid.
+3. Press `Ctrl+Shift+B` (or `Cmd+Shift+B` on macOS) to run the **Flash to micro:bit** task, which archives your source automatically and flashes the board.
+
+   This launches `scripts/flash_py.sh`, our small helper that:
+
+- Converts the current `.py` file to a `.hex` using `py2hex` (via the uflash package) and saves it to `./build/`.
+   - Archives your `.py` source under `python/archive/` or `python/<kid>/archive/` with a timestamp.
+   - Copies the `.hex` to the board and syncs/unmounts.
+   - Checks for `FAIL.TXT` so you get immediate feedback if something went wrong.
+
+### Serial console (optional)
+
+If you need to inspect `print()` output or interact with the MicroPython REPL,
+run the secondary VS Code task **Open serial console**.  It starts
+`python -m serial.tools.miniterm /dev/ttyACM0 115200` in a dedicated panel.  To
+exit the console press `Ctrl-]` followed by `Ctrl-D`.
 
 ## Git & GitHub conventions
 

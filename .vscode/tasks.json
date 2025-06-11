@@ -4,7 +4,10 @@
         {
             "label": "Flash to micro:bit",
             "type": "shell",
-            "command": "uflash ${file}",
+            "command": "${workspaceFolder}/scripts/flash_py.sh",
+            "args": [
+                "${file}"
+            ],
             "presentation": {
                 "reveal": "always",
                 "panel": "shared"
@@ -12,6 +15,20 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Open serial console",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "-m", "serial.tools.miniterm",
+                "/dev/ttyACM0", "115200"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
             },
             "problemMatcher": []
         }

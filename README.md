@@ -64,7 +64,33 @@ For Python-based micro:bit projects (for advanced users), we've included a templ
    ```bash
    code .
    ```
-2. Edit your Python code in `python/main.py` (starting template provided).
-3. Press `Ctrl+Shift+B` (or `Cmd+Shift+B` on macOS) to run the **Flash to micro:bit** task.
+2. Create (if needed) and edit a per-child Python file under `python/` (for example `python/axel/main.py`) instead of the default `python/main.py` to organize code per kid.
+3. Press `Ctrl+Shift+B` (or `Cmd+Shift+B` on macOS) to run the **Flash to micro:bit** task, which will also archive your source to prevent accidental loss.
 
-Your script will be converted to a `.hex` and flashed to the connected micro:bit automatically.
+Behind the scenes this will call `scripts/flash_py.sh`, which:
+
+1. Converts the active `.py` file to a `.hex` using `py2hex` (via the uflash package) and saves it to `./build/`.
+2. Archives your `.py` source under `python/archive/` or `python/<kid>/archive/` with a timestamp.
+3. Copies the `.hex` to the connected micro:bit drive.
+4. Syncs/unmounts the drive and checks for `FAIL.TXT` so you get **immediate** feedback if something went wrong.
+
+When everything is fine you will see a green “Flash successful!” message in the VS Code terminal and your Python program will start running on the board within a couple of seconds.
+
+### (Optional) Serial console
+
+Want to see `print()` output or REPL messages?  Run the **Open serial console** task:
+
+1. Press `F1` → *Tasks: Run Task* → *Open serial console*, or
+2. Use the dedicated keybinding you may assign in VS Code.
+
+This opens a `miniterm` session at `115200 baud` on `/dev/ttyACM0`.  Close it with `Ctrl-]` then `Ctrl-D`.
+
+### Saving hex programs from the micro:bit
+
+If you need to retrieve a MakeCode or previously flashed Python `.hex` file from the board, use the `scripts/save_hex.sh` helper:
+
+```bash
+scripts/save_hex.sh <kid_name> [dest_base_dir]
+```
+
+This will copy `microbit.hex` from the connected micro:bit drive into a timestamped file under `programs/<kid_name>/` by default (or the specified destination directory), making it easy to keep each child's programs organized.

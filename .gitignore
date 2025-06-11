@@ -1,5 +1,7 @@
 # Archive folder for hex files
 archive/*.hex*
+# Saved program backups per kid
+programs/
 
 # VSCode workspace settings
 .vscode/
