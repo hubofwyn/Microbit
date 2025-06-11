@@ -1,1 +1,28 @@
+# Microbit project ignore patterns
+
+# Archive of hex files
 archive/*.hex*
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python virtual environments
+.venv/
+venv/
+.env
+
+# macOS file attributes
+.DS_Store
+
+# Logs and temporary files
+*.log
+
+# Editor backup and IDE files
+*~
+*.swp
+.idea/
+
+# VSCode user-specific settings (we version tasks.json)
+.vscode/settings.json
