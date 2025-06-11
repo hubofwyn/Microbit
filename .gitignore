@@ -1,28 +1,15 @@
-# Microbit project ignore patterns
-
-# Archive of hex files
+# Archive folder for hex files
 archive/*.hex*
 
-# Byte-compiled / optimized / DLL files
+# VSCode workspace settings
+.vscode/
+
+# Python cache and compiled files
 __pycache__/
-*.py[cod]
-*$py.class
+*.pyc
 
-# Python virtual environments
-.venv/
-venv/
-.env
-
-# macOS file attributes
-.DS_Store
-
-# Logs and temporary files
+# Log files
 *.log
 
-# Editor backup and IDE files
-*~
-*.swp
-.idea/
-
-# VSCode user-specific settings (we version tasks.json)
-.vscode/settings.json
+# System files
+.DS_Store

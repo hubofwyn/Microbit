@@ -1,113 +1,104 @@
-# Project Configuration Guide
+# Configuration Guide
 
-This document provides detailed information on the scripts, configurations,
-and file structure included in this repository to streamline micro:bit
-development using MakeCode and MicroPython, both via command-line scripts
-and within VSCode.
+This document describes the layout and configuration of this repository,
+including the helper scripts, Python/VSCode setup, and Git/GitHub conventions.
 
-## Repository Layout
+## Repository layout
 
-```text
-.
-├── archive/              # Archived .hex builds (ignored by Git)
-├── scripts/              # Helper scripts for flashing and firmware updates
-│   ├── flash.sh          # Simple flash script for beginners
-│   ├── flash_dbg.sh      # Advanced debug-flash script with logging
-│   └── flash_fw.sh       # Firmware update script (maintenance mode)
-├── python/               # Python/MicroPython template code
-│   └── main.py           # Example MicroPython script to run on micro:bit
-├── .vscode/              # VSCode editor configuration
-│   └── tasks.json        # VSCode Build Task for flashing Python code
-├── .gitignore            # Patterns for files/directories to ignore in Git
-├── README.md             # High-level usage and getting started guide
-└── CONFIGURATION.md      # (this file) detailed config & usage reference
+```
+/archive/               Archived MakeCode `.hex` files
+/scripts/               Helper flash and firmware-update scripts
+/python/                MicroPython template files
+.vscode/tasks.json      VSCode task for flashing Python code
+README.md               Project overview and quickstart instructions
+CONFIGURATION.md        This configuration guide
+.gitignore              Git ignore rules
 ```
 
----
+## Scripts
 
-## Quick Flash Script (`scripts/flash.sh`)
+### `scripts/flash.sh` (Beginner friendly)
 
-Beginners can flash their MakeCode `.hex` files with a single command:
+A simple flash helper for beginners:
+
+- Finds the newest `microbit-*.hex` in `~/Downloads`
+- Copies it to the micro:bit drive (`MICROBIT`)
+- Synchronizes and reports "Done!"
+
+Usage:
 
 ```bash
 scripts/flash.sh
 ```
 
-This script:
+### `scripts/flash_dbg.sh` (Advanced logging)
 
-- Locates the newest `microbit-*.hex` in your `$HOME/Downloads`.
-- Finds the **MICROBIT** USB drive.
-- Copies the file and synchronizes it.
-- Prints a simple “Done!” message when complete.
+A debug flash script that:
 
----
+- Finds and archives the latest downloaded `.hex` to `archive/` with timestamp
+- Copies and syncs to the micro:bit
+- Compares SHA‑1 checksums before and after
+- Unmounts the device and shows kernel messages
+- Logs output to `/tmp/flash_dbg_<timestamp>.log`
 
-## Advanced Debug Flash Script (`scripts/flash_dbg.sh`)
-
-For more control and logging, use:
+Usage:
 
 ```bash
 scripts/flash_dbg.sh
 ```
 
-Features include:
+### `scripts/flash_fw.sh` (Firmware update)
 
-- Archiving each flashed `.hex` into `archive/` with a timestamp.
-- Detailed logging (saved to `/tmp/flash_dbg_<timestamp>.log`).
-- SHA-1 checksum comparison, unmount, and kernel message tail.
+A script to update the DAPLink interface firmware on a micro:bit in
+maintenance mode (drive label `MAINTENANCE`):
 
----
+- Finds the newest `*beta*.hex` in the project root
+- Copies it to the maintenance-mode drive and syncs
 
-## Firmware Update Script (`scripts/flash_fw.sh`)
+Usage:
 
-To update the DAPLink interface firmware (maintenance mode):
+```bash
+scripts/flash_fw.sh
+```
 
-1. Put the micro:bit into maintenance mode (hold RESET while plugging in).
-2. Verify a drive labeled **MAINTENANCE** is mounted.
-3. Run:
-   ```bash
-   scripts/flash_fw.sh
-   ```
+#### Entering maintenance mode
 
-The script finds the latest `*beta*.hex` firmware in the repo root, flashes it,
-and logs output to `/tmp/flash_fw_<timestamp>.log`.
+To enter maintenance mode:
 
----
+1. Unplug the micro:bit.
+2. Press and hold the reset button while plugging it back in.
+3. The board will mount as a drive labeled `MAINTENANCE`.
 
-## Python Development & VSCode Setup
-
-We’ve provided a template and a VSCode Build Task so you can write
-MicroPython code and flash it directly from the editor.
+## Python development with VSCode
 
 ### Prerequisites
 
-- Python 3 and `pip`
-- Install `uflash`:
-  ```bash
-  pip install uflash
+- Python 3
+- [uflash](https://github.com/ntoll/uflash): `pip install uflash`
+- [Visual Studio Code](https://code.visualstudio.com/) with the Python extension
+
+### Getting started
+
+1. Open the project in VSCode:
+   ```bash
+   code .
+   ```
+2. Edit `python/main.py` as your MicroPython code starter template.
+3. Press `Ctrl+Shift+B` (or `Cmd+Shift+B` on macOS) to run the **Flash to micro:bit** task,
+   which invokes `uflash` on the active file and flashes the resulting `.hex`.
+
+## Git & GitHub conventions
+
+- **Branch**: The default branch is named `main`.
+- **Remote**: The `origin` remote points to the GitHub repository:
   ```
-- VSCode with the Python extension
-
-### Using the template
-
-Edit your code in `python/main.py`.
-
-### Flashing from VSCode
-
-Press **Ctrl+Shift+B** (or **Cmd+Shift+B** on macOS), which runs the
-**Flash to micro:bit** task defined in `.vscode/tasks.json`. This will
-automatically convert and flash your current Python file to the connected
-micro:bit.
+  git@github.com:hubofwyn/Microbit.git
+  ```
+- **Archive**: All archived hex files are stored in `archive/` (ignored by Git).
+- **Commits**: Organize commits logically; avoid unrelated changes in the same commit.
+- **Pull requests**: Use GitHub PRs for code reviews and collaboration.
 
 ---
 
-## GitHub Publishing
-
-This repository is already configured for GitHub. Create and push to the
-remote with:
-
-```bash
-gh repo create --public --source=. --remote=origin --push --confirm
-```
-
-You now have a clean, well-organized project ready for public sharing.
+That's the full configuration for this project.  
+Happy coding!
